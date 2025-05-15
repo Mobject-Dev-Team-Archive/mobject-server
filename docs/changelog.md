@@ -3,6 +3,7 @@
 ## v0.17.0-alpha
 
 - Updated to support mobject-core v0.7.0
+- Changed to add ErrorCode to all errors.
 
 ## v0.16.0-alpha
 

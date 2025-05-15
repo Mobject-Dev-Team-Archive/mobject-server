@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="RpcManager" Id="{308b5439-3f52-0c22-3a38-2a4336aefe7b}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK RpcManager IMPLEMENTS I_RpcManager
 VAR
@@ -49,18 +49,18 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryCreateSerializer(Request, serializer) THEN
-	Response.Error('RPC : Missing or unsupported accept type in header');
+	Response.Error('INVALID_HEADER_ACCEPT_TYPE', 'Missing or unsupported accept type in header');
 	RETURN;
 END_IF
 
 IF NOT TryCreateDeserializer(Request, deserializer) THEN
-	Response.Error('RPC : Missing or unsupported content type in header');
+	Response.Error('INVALID_HEADER_CONTENT_TYPE','Missing or unsupported content type in header');
 	serializer.Dispose();
 	RETURN;
 END_IF
 
 IF NOT TryCreateAsynchronousRpcResponse(Response, serializer, asynchronousRpcResponse) THEN
-	Response.Error('RPC : Unable to create asynchronous response for handler');
+	Response.Error('SERVER_INTERNAL_ERROR','Unable to create asynchronous response for handler');
 	serializer.Dispose();
 	deserializer.Dispose();
 	RETURN;
@@ -69,7 +69,7 @@ END_IF
 IF NOT asyncRpcCallQueue.TryAddRpcCall(deserializer, asynchronousRpcResponse, Handler) THEN
 	serializer.Dispose();
 	deserializer.Dispose();
-	asynchronousRpcResponse.RejectWithMessage('RPC : Unable to create rpc call');
+	asynchronousRpcResponse.RejectWithError('SERVER_INTERNAL_ERROR','Unable to create rpc call');
 	RETURN;
 END_IF
 
@@ -92,18 +92,18 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryCreateSerializer(Request, serializer) THEN
-	Response.Error('RPC : Missing or unsupported accept type in header');
+	Response.Error('INVALID_HEADER_ACCEPT_TYPE','Missing or unsupported accept type in header');
 	RETURN;
 END_IF
 
 IF NOT TryCreateDeserializer(Request, deserializer) THEN
-	Response.Error('RPC : Missing or unsupported content type in header');
+	Response.Error('INVALID_HEADER_CONTENT_TYPE','Missing or unsupported content type in header');
 	serializer.Dispose();
 	RETURN;
 END_IF
 
 IF NOT TryCreateSynchronousRpcResponse(Response, serializer, synchronousRpcResponse) THEN
-	Response.Error('RPC : Unable to create synchronous response for handler');
+	Response.Error('SERVER_INTERNAL_ERROR','Unable to create synchronous response for handler');
 	serializer.Dispose();
 	deserializer.Dispose();
 	RETURN;
@@ -116,7 +116,7 @@ deserializer.Dispose();
 serializer.Dispose();
 
 IF NOT Response.HeadersSent THEN
-	Response.Error('RPC : Handler did not return a valid response');
+	Response.Error('SERVER_INTERNAL_ERROR','Handler did not return a valid response');
 	RETURN;
 END_IF]]></ST>
       </Implementation>
@@ -247,7 +247,7 @@ IF requestType <> 'RPC 1.0' THEN
 END_IF
 
 IF NOT headerAccessor.TryGetMethodNameFromRequest(Request, methodName) THEN
-	Response.Error('RPC : Missing RPC method name');
+	Response.Error('INVALID_RPC_METHOD_NAME','Missing RPC method name');
 	TryHandleIncomingRequest := TRUE;
 	RETURN;
 END_IF

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="ServerResponse" Id="{b3085449-71a6-0676-162b-646709c1d992}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
@@ -70,6 +70,7 @@ memcpy(ADR(responseData.Payload),PayloadDataAddress,PayloadDataSize);]]></ST>
     <Method Name="Error" Id="{0ed76059-2d79-02fa-1e8a-7f218a6895f1}">
       <Declaration><![CDATA[METHOD PUBLIC Error
 VAR_INPUT
+	ErrorCode : T_MAXSTRING;
 	Message : T_MAXSTRING;
 END_VAR]]></Declaration>
       <Implementation>
@@ -77,7 +78,7 @@ END_VAR]]></Declaration>
 	RETURN;
 END_IF
 
-headerAccessor.UpdateResponseWithError(THIS^, Message);
+headerAccessor.UpdateResponseWithError(THIS^, ErrorCode, Message);
 CompleteResponseWithoutPayload();]]></ST>
       </Implementation>
     </Method>
@@ -128,7 +129,7 @@ END_VAR]]></Declaration>
 END_IF
 
 IF (NOT __ISVALIDREF(ResponseId)) OR_ELSE ResponseId = '' THEN
-	Error('Unable to mark response as pending without ResponseId');
+	Error('MISSING_RESPONSE_ID', 'Unable to mark response as pending without ResponseId');
 	RETURN;
 END_IF
 
@@ -171,7 +172,7 @@ IF PayloadDataSize > SIZEOF(responseData.Payload) THEN
 	errorMessage := concat(errorMessage, UDINT_TO_STRING(SIZEOF(responseData.Payload)));
 	errorMessage := concat(errorMessage, ', Actual Size : ');
 	errorMessage := concat(errorMessage, UDINT_TO_STRING(SIZEOF(PayloadDataSize)));
-	Error(errorMessage);
+	Error('PAYLOAD_TOO_BIG', errorMessage);
 	RETURN;
 END_IF
 

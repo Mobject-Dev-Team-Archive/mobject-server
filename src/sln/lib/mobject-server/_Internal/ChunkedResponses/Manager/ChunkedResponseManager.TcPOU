@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="ChunkedResponseManager" Id="{3d8bc4c1-afb6-0b3d-2d8b-2af974c01b7e}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
@@ -68,7 +68,7 @@ END_VAR]]></Declaration>
 END_IF
 
 IF NOT headerAccessor.TryGetSessionIdFromResponse(OriginalResponse,sessionId) THEN
-	OriginalResponse.Error('Unable to chunk oversized response without a sessionId');
+	OriginalResponse.Error('MISSING_SESSION_ID','Unable to chunk oversized response without a sessionId');
 	RETURN;
 END_IF
 
@@ -76,7 +76,7 @@ chunkedResponseData := CreateChunkedResponseData(SourceAddress, SourceSize);
 responseId := responseIdGenerator.Generate();
 
 IF NOT sessionStorage.TryStoreSessionDataById(sessionId, responseId, chunkedResponseData) THEN
-	OriginalResponse.Error('Unable to store oversized response');
+	OriginalResponse.Error('SERVER_INTERNAL_ERROR','Unable to store oversized response');
 	chunkedResponseData.Dispose();
 	RETURN;
 END_IF

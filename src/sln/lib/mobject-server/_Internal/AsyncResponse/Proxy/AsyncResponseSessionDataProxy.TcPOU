@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="AsyncResponseSessionDataProxy" Id="{bcb02eb0-e014-04b5-02eb-09be8f08cf5b}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
@@ -19,6 +19,7 @@ END_VAR
     <Method Name="Error" Id="{fcc6a772-3725-0f26-318c-a24a3405422e}">
       <Declaration><![CDATA[METHOD PUBLIC Error
 VAR_INPUT
+	ErrorCode : T_MAXSTRING;
 	Message : T_MAXSTRING;
 END_VAR
 VAR
@@ -29,7 +30,7 @@ END_VAR]]></Declaration>
 	RETURN;
 END_IF
 
-asyncReponseSessionData.Error(Message);]]></ST>
+asyncReponseSessionData.Error(ErrorCode, Message);]]></ST>
       </Implementation>
     </Method>
     <Method Name="FB_init" Id="{211ec0f6-35b8-0342-27a3-6a265a16fe1f}" FolderPath="Constructor\">

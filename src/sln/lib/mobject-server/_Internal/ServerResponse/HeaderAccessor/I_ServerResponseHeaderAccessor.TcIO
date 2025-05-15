@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <Itf Name="I_ServerResponseHeaderAccessor" Id="{53bef890-c057-0df6-052a-6ae563d65901}">
     <Declaration><![CDATA[INTERFACE I_ServerResponseHeaderAccessor
 ]]></Declaration>
@@ -17,13 +17,13 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="UpdateResponseWithError" Id="{1e97ceb8-7123-0088-09fe-83219ced09a7}">
+    <Method Name="UpdateResponseWithError" Id="{ddd30f34-ad3f-476c-b546-742814b5de28}">
       <Declaration><![CDATA[METHOD PUBLIC UpdateResponseWithError
 VAR_INPUT
 	Response : I_ServerResponse;
+	ErrorCode : T_MAXSTRING;
 	Message : T_MAXSTRING;
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
     </Method>
     <Method Name="UpdateResponseWithPending" Id="{a5368b50-802f-04a8-3040-2d1aa4dde5d5}">
       <Declaration><![CDATA[METHOD PUBLIC UpdateResponseWithPending

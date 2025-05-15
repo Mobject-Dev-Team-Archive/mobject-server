@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="AsyncResponseSessionData" Id="{9cc4e204-5fa4-0e8b-011f-cb4137ada1d7}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
@@ -8,6 +8,7 @@ FUNCTION_BLOCK AsyncResponseSessionData EXTENDS Disposable IMPLEMENTS I_AsyncRes
 VAR
 	_suggestedRetryDelayInMs : UDINT;
 	state : (PENDING, SUCCESS, SUCCESS_WITH_PAYLOAD, ERROR) := PENDING;
+	errorCode : T_MAXSTRING;
 	errorMessage : T_MAXSTRING;
 	pData : POINTER TO BYTE;
 	dataSize : UDINT;
@@ -49,6 +50,7 @@ dataSize := 0;]]></ST>
     <Method Name="Error" Id="{8301ffc4-34a9-0ab9-282c-a07e0d209064}">
       <Declaration><![CDATA[METHOD PUBLIC Error
 VAR_INPUT
+	ErrorCode : T_MAXSTRING;
 	Message : T_MAXSTRING;
 END_VAR]]></Declaration>
       <Implementation>
@@ -57,6 +59,7 @@ END_VAR]]></Declaration>
 END_IF
 
 state := ERROR;
+THIS^.errorCode := ErrorCode;
 errorMessage := Message;]]></ST>
       </Implementation>
     </Method>
@@ -165,7 +168,7 @@ IF State = SUCCESS THEN
 END_IF
 
 IF state = ERROR THEN
-	Response.Error(errorMessage);
+	Response.Error(errorCode, errorMessage);
 	TryUpdateServerResponse := TRUE;
 	RETURN;
 END_IF]]></ST>

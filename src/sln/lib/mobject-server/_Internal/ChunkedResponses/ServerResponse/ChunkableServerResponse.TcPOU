@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="ChunkableServerResponse" Id="{2fe2454c-a3f1-0dae-05f0-d9a275bb7efe}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
@@ -33,10 +33,11 @@ END_VAR]]></Declaration>
     <Method Name="Error" Id="{cdb1f046-0dbf-0f4a-1a04-825152a18feb}">
       <Declaration><![CDATA[METHOD PUBLIC Error
 VAR_INPUT
+	ErrorCode : T_MAXSTRING;
 	Message : T_MAXSTRING;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[serverResponse.Error(Message);]]></ST>
+        <ST><![CDATA[serverResponse.Error(ErrorCode, Message);]]></ST>
       </Implementation>
     </Method>
     <Method Name="FB_init" Id="{f147299a-b64c-085b-1319-2bb7394bb5ef}" FolderPath="Constructor\">

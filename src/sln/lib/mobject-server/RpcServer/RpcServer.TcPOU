@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="RpcServer" Id="{d0c543ee-285c-0d92-3327-6786bf152970}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
@@ -128,7 +128,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[middlewareStack.Handle(request, serverResponse);
 
 IF NOT serverResponse.HeadersSent THEN
-	serverResponse.Error('Unhandled Request');
+	serverResponse.Error('UNHANDLED_REQUEST', 'Unhandled Request');
 END_IF
 
 serverResponse.TryGetData(HandleRequest);]]></ST>

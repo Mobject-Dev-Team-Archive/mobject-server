@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="SynchronousRpcResponse" Id="{c3ba7e65-8591-0ab0-0758-ff428caf89f5}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
@@ -231,13 +231,14 @@ END_VAR
         <ST><![CDATA[GetSerializer := serializer.Clone();]]></ST>
       </Implementation>
     </Method>
-    <Method Name="RejectWithMessage" Id="{85770cc9-ea5e-0835-3468-a7f22704beed}">
-      <Declaration><![CDATA[METHOD PUBLIC RejectWithMessage
+    <Method Name="RejectWithError" Id="{85770cc9-ea5e-0835-3468-a7f22704beed}">
+      <Declaration><![CDATA[METHOD PUBLIC RejectWithError
 VAR_INPUT
+	ErrorCode : T_MAXSTRING;
 	Message : T_MAXSTRING;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[serverResponse.Error(Message);]]></ST>
+        <ST><![CDATA[serverResponse.Error(ErrorCode, Message);]]></ST>
       </Implementation>
     </Method>
     <Method Name="SendSuccessResponseUsingSeralizer" Id="{d48b560a-6ca1-085c-0af3-0608e8d24229}" FolderPath="Protected\">
@@ -259,7 +260,7 @@ END_IF
 pJsonString := __NEW(BYTE, jsonSize);
 
 IF NOT Serializer.TryGetSerializedData(pJsonString, jsonSize) THEN
-	serverResponse.Error('RPC Handler unable to get serialized data');
+	serverResponse.Error('SERVER_INTERNAL_ERROR','RPC Handler unable to get serialized data');
 	__DELETE(pJsonString);
 	RETURN;
 END_IF

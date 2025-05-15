@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="SyncToAsyncEchoRpcHandler" Id="{1e2412a2-f1b1-4465-80c2-0a0e7fcc5168}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK SyncToAsyncEchoRpcHandler IMPLEMENTS I_SynchronousRpcHandler
 VAR
@@ -49,12 +49,12 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Busy THEN
-	Response.RejectWithMessage('Already processing response');
+	Response.RejectWithError('HANDLER_TOO_BUSY','Already processing response');
 	RETURN;
 END_IF
 
 IF NOT Parameters.TryGetKeyString('Echo', echo, deserializerFeedback) THEN
-	Response.RejectWithMessage('Missing Echo parameter');
+	Response.RejectWithError('MISSING_PARAMETER','Missing Echo parameter');
 	RETURN;
 END_IF
 

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="RejectWithMessageAsyncHandler" Id="{76f722c4-335d-4072-b575-36ba2411bf2a}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK RejectWithMessageAsyncHandler IMPLEMENTS I_AsynchronousRpcHandler
 VAR
@@ -17,7 +17,7 @@ END_VAR
 VAR
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[Response.RejectWithMessage('This is the reject message');]]></ST>
+        <ST><![CDATA[Response.RejectWithError('EXAMPLE_ERROR_CODE','This is the reject message');]]></ST>
       </Implementation>
     </Method>
   </POU>
