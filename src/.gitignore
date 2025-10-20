@@ -54,6 +54,7 @@ tchmipublish.journal.json
 *.nuget.targets
 
 ### Visual studio files ###
+*.vsidx
 *.obj
 *.exe
 *.pdb

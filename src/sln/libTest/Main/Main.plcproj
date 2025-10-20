@@ -9,7 +9,7 @@
     <WriteProductVersion>true</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>Main</Name>
-    <ProgramVersion>3.1.4024.0</ProgramVersion>
+    <ProgramVersion>3.1.4026.19</ProgramVersion>
     <Application>{dc9c6d1b-aebc-4c8e-b662-9fe84486407b}</Application>
     <TypeSystem>{381eb040-6e7d-4ef4-b122-80236cc72f3f}</TypeSystem>
     <Implicit_Task_Info>{75794d49-5390-422d-86fa-2b78cb615ef1}</Implicit_Task_Info>
@@ -92,10 +92,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <LibraryReference Include="mobject-core,0.7.0,mobject">
+    <LibraryReference Include="mobject-core,0.8.0,mobject">
       <Namespace>mobject_core</Namespace>
     </LibraryReference>
-    <LibraryReference Include="mobject-server,0.17.0,mobject">
+    <LibraryReference Include="mobject-server,0.18.0,mobject">
       <Namespace>mobject_server</Namespace>
     </LibraryReference>
   </ItemGroup>
