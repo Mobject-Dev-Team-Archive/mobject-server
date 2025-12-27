@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="AsyncResponseManager" Id="{2300ef51-b6f6-0afc-3adc-e871aa496f4f}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
@@ -74,7 +74,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT headerAccessor.TryGetSessionIdFromResponse(Response,sessionId) THEN
-	Response.Error('Unable to create a pending response without a sessionId');
+	Response.Error('MISSING_SESSION_ID','Unable to create a pending response without a sessionId');
 	RETURN;
 END_IF
 
@@ -82,7 +82,7 @@ asyncResponseSessionData := CreateAsyncResponseSessionData(RetryDelayInMs);
 responseId := responseIdGenerator.Generate();
 
 IF NOT sessionStorage.TryStoreSessionDataById(sessionId, responseId, asyncResponseSessionData) THEN
-	Response.Error('Unable to store pending response');
+	Response.Error('SERVER_INTERNAL_ERROR','Unable to store pending response');
 	asyncResponseSessionData.Dispose();
 	RETURN;
 END_IF
@@ -128,7 +128,7 @@ IF asyncResponseData.IsPending THEN
 END_IF
 
 IF NOT asyncResponseData.TryUpdateServerResponse(Response) THEN	
-	Response.Error('Unable to update server response with pending data');
+	Response.Error('SERVER_INTERNAL_ERROR','Unable to update server response with pending data');
 	TryHandleIncomingRequest := TRUE;
 	RETURN;
 END_IF

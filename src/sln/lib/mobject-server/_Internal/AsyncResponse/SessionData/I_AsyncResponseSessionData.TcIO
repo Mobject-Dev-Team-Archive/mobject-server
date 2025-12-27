@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <Itf Name="I_AsyncResponseSessionData" Id="{a08a9dea-a80a-0ef0-0fd9-859e178535e4}">
     <Declaration><![CDATA[INTERFACE I_AsyncResponseSessionData EXTENDS I_SessionData]]></Declaration>
     <Method Name="Error" Id="{e455a056-627c-0b2c-0610-56ca0c23ea4a}">
       <Declaration><![CDATA[METHOD PUBLIC Error
 VAR_INPUT
+	ErrorCode : T_MAXSTRING;
 	Message : T_MAXSTRING;
 END_VAR]]></Declaration>
     </Method>

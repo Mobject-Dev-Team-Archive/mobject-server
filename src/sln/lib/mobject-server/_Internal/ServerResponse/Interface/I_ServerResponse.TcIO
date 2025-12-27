@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <Itf Name="I_ServerResponse" Id="{e40a3331-8557-094a-10a6-a8155fda0cd7}">
     <Declaration><![CDATA[INTERFACE I_ServerResponse
 ]]></Declaration>
@@ -16,6 +16,7 @@ END_VAR]]></Declaration>
     <Method Name="Error" Id="{457d175b-7c57-09cf-2d6a-81bb7a2d9875}">
       <Declaration><![CDATA[METHOD PUBLIC Error
 VAR_INPUT
+	ErrorCode : T_MAXSTRING;
 	Message : T_MAXSTRING;
 END_VAR]]></Declaration>
     </Method>

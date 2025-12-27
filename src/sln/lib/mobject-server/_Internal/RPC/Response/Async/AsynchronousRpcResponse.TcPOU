@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="AsynchronousRpcResponse" Id="{faf30825-210e-087f-2861-c8717cfc5c50}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
@@ -247,14 +247,15 @@ END_VAR
         <ST><![CDATA[GetSerializer := serializer.Clone();]]></ST>
       </Implementation>
     </Method>
-    <Method Name="RejectWithMessage" Id="{52ae8dfe-b12b-07de-2a95-07c53fd74310}">
-      <Declaration><![CDATA[METHOD PUBLIC RejectWithMessage
+    <Method Name="RejectWithError" Id="{52ae8dfe-b12b-07de-2a95-07c53fd74310}">
+      <Declaration><![CDATA[METHOD PUBLIC RejectWithError
 VAR_INPUT
+	ErrorCode : T_MAXSTRING;
 	Message : T_MAXSTRING;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF asyncResponse <> 0 THEN
-	asyncResponse.Error(Message);
+	asyncResponse.Error(ErrorCode, Message);
 END_IF
 
 Dispose();]]></ST>
@@ -283,7 +284,7 @@ END_IF
 pJsonString := __NEW(BYTE, jsonSize);
 
 IF NOT Serializer.TryGetSerializedData(pJsonString, jsonSize) THEN
-	asyncResponse.Error('RPC Handler unable to get serialized data');
+	asyncResponse.Error('SERVER_INTERNAL_ERROR','RPC Handler unable to get serialized data');
 	__DELETE(pJsonString);
 	RETURN;
 END_IF

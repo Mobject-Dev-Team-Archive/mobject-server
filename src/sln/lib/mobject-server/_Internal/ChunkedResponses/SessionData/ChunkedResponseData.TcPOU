@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="ChunkedResponseData" Id="{ef55a9f1-3b8c-06ed-15e0-b077345d2960}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
@@ -69,7 +69,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF SendComplete THEN 
-	Response.Error('No further data to send');
+	Response.Error('BAD_REQUEST', 'No further data to send');
 	RETURN;
 END_IF
 

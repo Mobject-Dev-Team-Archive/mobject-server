@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="ChunkedRequestsManager" Id="{bef17b1e-f08c-038f-0967-ac86d11b34a0}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
@@ -80,43 +80,43 @@ END_IF
 // from this point on, we simply validate until we know we have all the required parts. 
 
 IF NOT hasChunkSequenceHeader THEN
-	response.Error('Chunked Request found, but chunk sequence header data is missing');
+	response.Error('INVALID_CHUNK_HEADER','Chunked Request found, but chunk sequence header data is missing');
 	TryHandleIncomingRequest := TRUE;
 	RETURN;
 END_IF
 
 IF chunkSequence = 0 THEN
-	response.Error('Chunk sequence 0 received, chunks must start from 1');
+	response.Error('INVALID_CHUNK_HEADER','Chunk sequence 0 received, chunks must start from 1');
 	TryHandleIncomingRequest := TRUE;
 	RETURN;
 END_IF
 
 IF NOT hasChunkTotalHeader THEN
-	response.Error('Chunked Request found, but chunk total header data is missing');
+	response.Error('INVALID_CHUNK_HEADER','Chunked Request found, but chunk total header data is missing');
 	TryHandleIncomingRequest := TRUE;
 	RETURN;
 END_IF
 
 IF chunkSequence > chunkTotal THEN
-	response.Error('Chunk sequence is greater than the chunk total');
+	response.Error('INVALID_CHUNK_HEADER','Chunk sequence is greater than the chunk total');
 	TryHandleIncomingRequest := TRUE;
 	RETURN;
 END_IF
 
 IF NOT hasMoreChunksHeader THEN
-	response.Error('Chunked Request found, but has more chunks header data is missing');
+	response.Error('INVALID_CHUNK_HEADER','Chunked Request found, but has more chunks header data is missing');
 	TryHandleIncomingRequest := TRUE;
 	RETURN;
 END_IF
 
 IF NOT headerAccessor.TryGetRequestIdFromRequest(Request, requestId) THEN
-	response.Error('Chunked Request found, but request id header data is missing');
+	response.Error('INVALID_CHUNK_HEADER','Chunked Request found, but request id header data is missing');
 	TryHandleIncomingRequest := TRUE;
 	RETURN;
 END_IF
 
 IF NOT headerAccessor.TryGetSessionIdFromRequest(Request, sessionId) THEN
-	response.Error('Chunked Request found, but session id header data is missing');
+	response.Error('INVALID_CHUNK_HEADER','Chunked Request found, but session id header data is missing');
 	TryHandleIncomingRequest := TRUE;
 	RETURN;
 END_IF
@@ -127,13 +127,13 @@ IF NOT sessionStorage.TryRetreiveSessionDataById(sessionId, requestId, sessionDa
 	chunkedRequestData := CreateChunkedRequestData(maximumChunkSizeInBytes, DINT_TO_UDINT(chunkTotal));
 	sessionStorage.TryStoreSessionDataById(sessionId, requestId, chunkedRequestData);
 ELSIF NOT __QUERYINTERFACE(sessionData, chunkedRequestData) THEN
-	response.Error('Server was unable to retreive previous session data as chunked request data');
+	response.Error('SERVER_INTERNAL_ERROR','Server was unable to retreive previous session data as chunked request data');
 	TryHandleIncomingRequest := TRUE;
 	RETURN;
 END_IF
 
 IF NOT chunkedRequestData.TryAddChunkedPayload(request.PayloadAddress, request.PayloadSizeInBytes, chunkSequence) THEN
-	response.Error('Unable to store request payload in chunk session storage');
+	response.Error('SERVER_INTERNAL_ERROR','Unable to store request payload in chunk session storage');
 	sessionStorage.DisposeSessionDataById(sessionId, requestId);
 	TryHandleIncomingRequest := TRUE;
 	RETURN;

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="HeaderAccessor" Id="{d021ecca-620e-0860-1f0e-52fe0a5ee06d}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK HeaderAccessor IMPLEMENTS I_SessionHeaderAccessor, I_ServerResponseHeaderAccessor, I_AsyncResponseHeaderAccessor, I_ChunkedResponseHeaderAccessor, I_ChunkedRequestsHeaderAccessor, I_RpcHeaderAccessor]]></Declaration>
     <Implementation>
@@ -61,6 +61,28 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="HeaderKey_ErrorCode" Id="{caea39de-9fa3-4ead-8668-419f396c3aa5}" FolderPath="Constants\">
+      <Declaration><![CDATA[PROPERTY PUBLIC HeaderKey_ErrorCode : T_MAXSTRING]]></Declaration>
+      <Get Name="Get" Id="{12f0f0c2-d2c7-46fa-8424-922e5810a9e7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HeaderKey_ErrorCode := 'Error-Code';]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="HeaderKey_ErrorMessage" Id="{c473bf28-9c3d-0d16-0730-d54e3bf39f8a}" FolderPath="Constants\">
+      <Declaration><![CDATA[PROPERTY PUBLIC HeaderKey_ErrorMessage : T_MAXSTRING]]></Declaration>
+      <Get Name="Get" Id="{e302caf0-03e0-0cfa-161e-a0840e8dae93}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[HeaderKey_ErrorMessage := 'Error-Message';]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="HeaderKey_HasMoreChunks" Id="{32886e17-e83b-0acf-0d65-b901dca4cc0a}" FolderPath="Constants\">
       <Declaration><![CDATA[PROPERTY PUBLIC HeaderKey_HasMoreChunks : T_MAXSTRING]]></Declaration>
       <Get Name="Get" Id="{5cfd1418-a3b0-03e8-308f-4dbf7ccd4b57}">
@@ -69,17 +91,6 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[HeaderKey_HasMoreChunks := 'Has-More-Chunks';]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="HeaderKey_Message" Id="{c473bf28-9c3d-0d16-0730-d54e3bf39f8a}" FolderPath="Constants\">
-      <Declaration><![CDATA[PROPERTY PUBLIC HeaderKey_Message : T_MAXSTRING]]></Declaration>
-      <Get Name="Get" Id="{e302caf0-03e0-0cfa-161e-a0840e8dae93}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[HeaderKey_Message := 'Message';]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -409,10 +420,11 @@ END_VAR]]></Declaration>
 Response.Header.TryWriteField(HeaderKey_Status, status);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="UpdateResponseWithError" Id="{2e898d81-f520-029c-17f5-197a713d6b2e}">
+    <Method Name="UpdateResponseWithError" Id="{0b708d26-a965-41c2-bfc4-274d0fa8ac4f}">
       <Declaration><![CDATA[METHOD PUBLIC UpdateResponseWithError
 VAR_INPUT
 	Response : I_ServerResponse;
+	ErrorCode : T_MAXSTRING;
 	Message : T_MAXSTRING;
 END_VAR
 VAR
@@ -421,7 +433,8 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[status := StatusValue_Error;
 Response.Header.TryWriteField(HeaderKey_Status, status);
-Response.Header.TryWriteField(HeaderKey_Message, Message);]]></ST>
+Response.Header.TryWriteField(HeaderKey_ErrorCode, ErrorCode);
+Response.Header.TryWriteField(HeaderKey_ErrorMessage, Message);]]></ST>
       </Implementation>
     </Method>
     <Method Name="UpdateResponseWithHasMoreChunks" Id="{d85749f5-b28e-02dd-3ee1-61d49f38421c}">

@@ -1,14 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="AsyncConcatStringRpcHandler" Id="{a084ccd3-ebc9-4cfa-b099-c76f4a382c47}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK AsyncConcatStringRpcHandler IMPLEMENTS I_AsynchronousRpcHandler
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="AsyncConcatStringRpcHandler" Id="{82a0c2b0-2608-4111-9dc8-14f4e6a02758}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'linkalways'} 
+FUNCTION_BLOCK AsyncConcatStringRpcHandler IMPLEMENTS I_AsynchronousRpcHandler
 VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="Handle" Id="{e9741a6d-c731-4bad-87f2-ccbeb5f2c658}">
+    <Method Name="Handle" Id="{d6cce1a3-c341-4d5c-bd30-723878b0741d}">
       <Declaration><![CDATA[METHOD Handle
 VAR_INPUT
 	Parameters : I_Deserializer;
@@ -22,12 +23,12 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT Parameters.TryGetKeyString('STR1',str1,feedback) THEN
-	Response.RejectWithMessage(feedback.FirstError.Message);
+	Response.RejectWithError('MISSING_PARAMETER',feedback.FirstError.Message);
 	RETURN;
 END_IF
 
 IF NOT Parameters.TryGetKeyString('STR2',str2,feedback) THEN
-	Response.RejectWithMessage(feedback.FirstError.Message);
+	Response.RejectWithError('MISSING_PARAMETER',feedback.FirstError.Message);
 	RETURN;
 END_IF
 

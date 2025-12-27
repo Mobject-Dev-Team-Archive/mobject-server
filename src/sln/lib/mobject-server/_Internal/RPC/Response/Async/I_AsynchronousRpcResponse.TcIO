@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <Itf Name="I_AsynchronousRpcResponse" Id="{a8d20c1b-a5f0-0b7a-12f5-6c66a034d30d}">
     <Declaration><![CDATA[INTERFACE I_AsynchronousRpcResponse EXTENDS I_Disposable
 ]]></Declaration>
@@ -106,9 +106,10 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="RejectWithMessage" Id="{5651e144-63ce-07cf-0fac-2689a3399c70}">
-      <Declaration><![CDATA[METHOD PUBLIC RejectWithMessage
+    <Method Name="RejectWithError" Id="{5651e144-63ce-07cf-0fac-2689a3399c70}">
+      <Declaration><![CDATA[METHOD PUBLIC RejectWithError
 VAR_INPUT
+	ErrorCode : T_MAXSTRING;
 	Message : T_MAXSTRING;
 END_VAR]]></Declaration>
     </Method>

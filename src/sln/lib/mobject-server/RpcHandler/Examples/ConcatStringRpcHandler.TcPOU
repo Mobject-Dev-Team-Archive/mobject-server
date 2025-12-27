@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="ConcatStringRpcHandler" Id="{6b570563-90ca-0168-02e7-bdb7639403ed}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK ConcatStringRpcHandler IMPLEMENTS I_SynchronousRpcHandler
+    <Declaration><![CDATA[{attribute 'linkalways'} 
+FUNCTION_BLOCK ConcatStringRpcHandler IMPLEMENTS I_SynchronousRpcHandler
 VAR
 END_VAR
 ]]></Declaration>
@@ -22,12 +23,12 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT Parameters.TryGetKeyString('STR1',str1,feedback) THEN
-	Response.RejectWithMessage(feedback.FirstError.Message);
+	Response.RejectWithError('MISSING_PARAMETER',feedback.FirstError.Message);
 	RETURN;
 END_IF
 
 IF NOT Parameters.TryGetKeyString('STR2',str2,feedback) THEN
-	Response.RejectWithMessage(feedback.FirstError.Message);
+	Response.RejectWithError('MISSING_PARAMETER',feedback.FirstError.Message);
 	RETURN;
 END_IF
 
